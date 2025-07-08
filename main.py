@@ -51,6 +51,31 @@ content_writer = Agent(
     llm=llm
 )
 
+# Research tasks
+research_tasks = Task(
+    description=(
+        """
+        1. Conduct comprehensive research on {topic} including:
+           - Recent developments and news
+           - Key industry trends and innovations
+           - Expert opinions and analyses
+           - Statistical data and market insights
+        2. Evaluate source credibility and fact-check all information
+        3. Organize findings into a structured research brief
+        4. Include all relevant citations and sources   
+        """
+    ),
+    expected_output="""
+    A detailed research report containing:
+    - Executive summary of key findings
+    - Comprehensive analysis of current trends and developments
+    - List of verified facts and statistics
+    - All citations and links to original sources
+    - Clear categorization of main themes and patterns
+    Please format with clear sections and bullet points for easy reference.
+    """,
+    agent=research_analyst
+)
 
 
 """
