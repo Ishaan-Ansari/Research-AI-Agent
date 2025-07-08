@@ -1,4 +1,4 @@
-from crewai import Agent, Task, Crew, LLM
+from crewai import Agent, Task, Crew, LLM, Process
 from crewai_tools import SerperDevTool
 
 from dotenv import load_dotenv
@@ -99,11 +99,26 @@ writing_task = Task(
     agent=content_writer
 )
 
+# crew = Crew(
+#     agents=[research_analyst, content_writer],
+#     tasks=[research_tasks, writing_task],
+#     process=Process.sequential,     # serialized way
+#     memory=True,
+#     cache=True,
+#     verbose=True
+# )
+
+# Ensure to provide a manager_llm or manager_agent
 crew = Crew(
     agents=[research_analyst, content_writer],
     tasks=[research_tasks, writing_task],
+    process=Process.hierarchical,     # hierarchical process
+    manager_llm='gpt-4o',
+    memory=True,
+    cache=True,
     verbose=True
 )
+
 
 result = crew.kickoff(inputs={"topic": topic})
 print(result)
