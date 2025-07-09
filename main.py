@@ -125,7 +125,7 @@ print(result)
 
 """
 In CrewAI we've 3 components 
-1. Agents - Consider them as characters [Like Researcher agent or Analyst agen]
+1. Agents - Consider them as characters [Like Researcher agent or Analyst agent]
 2. Tasks [imp] - What will the agent do ?
 3. Tools - How will i approach a particular task ?
 """
