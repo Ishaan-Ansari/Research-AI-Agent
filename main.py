@@ -102,8 +102,8 @@ class AgentFactory:
         )
 
 
-def main():
-    topic = "Generative AI in Medical industry"
+def main(topic: str):
+    # topic = "Generative AI in Medical industry"
 
     # tool 1
     llm = LLM(model='gpt-4')
@@ -111,13 +111,15 @@ def main():
     # tool 2
     search_tool = SerperDevTool(n=10)
 
+    factory = AgentFactory(llm, search_tool)
+
     # create agents
-    research_analyst = AgentFactory.research_analyst(topic)
-    content_writer = AgentFactory.content_writer(topic)
+    research_analyst = factory.research_analyst(topic)
+    content_writer = factory.content_writer(topic)
 
     # create tasks
-    research_tasks = AgentFactory.create_research_task(research_analyst, topic)
-    writing_task = AgentFactory.create_writing_task(content_writer)
+    research_tasks = factory.create_research_task(research_analyst, topic)
+    writing_task = factory.create_writing_task(content_writer)
 
     # crew = Crew(
     #     agents=[research_analyst, content_writer],
