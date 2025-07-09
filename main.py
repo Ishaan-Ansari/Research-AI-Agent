@@ -5,11 +5,13 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+
 class AgentFactory:
     def __init__(self, llm, search_tool):
-        self.llm=llm
-        self.search_tool=search_tool
-    def research_analyst(self, topic:str):
+        self.llm = llm
+        self.search_tool = search_tool
+
+    def research_analyst(self, topic: str):
         research_analyst = Agent(
             role="Seasoned and the best Research analyst of the world",
             goal=f'Research, analyze, and synthesize comprehensive information on {topic} from reliable web sources',
@@ -25,10 +27,12 @@ class AgentFactory:
                       "and source verification. Your analysis includes both"
                       "raw data and interpreted insights, making complex"
                       "information accessible and actionable.",
-            tools=[search_tool],
+            tools=[self.search_tool],
             allow_deligations=False,
-            llm=llm
+            llm=self.llm
         )
+
+        return research_analyst
 
     def content_writer(self, topic: str):
         content_writer = Agent(
@@ -43,10 +47,11 @@ class AgentFactory:
                       "complex topics approachable without oversimplifying them.",
             allow_delegation=False,
             verbose=True,
-            llm=llm
+            llm=self.llm
         )
+        return content_writer
 
-    def create_research_task(agent, topic):
+    def create_research_task(self, agent, topic):
         return Task(
             description=(
                 f"""
@@ -72,7 +77,7 @@ class AgentFactory:
             agent=agent
         )
 
-    def create_writing_task(agent):
+    def create_writing_task(self, agent):
         return Task(
             description="""
                 Using the research brief provided, create an engaging blog post that:
@@ -106,6 +111,14 @@ def main():
     # tool 2
     search_tool = SerperDevTool(n=10)
 
+    # create agents
+    research_analyst = AgentFactory.research_analyst(topic)
+    content_writer = AgentFactory.content_writer(topic)
+
+    # create tasks
+    research_tasks = AgentFactory.create_research_task(research_analyst, topic)
+    writing_task = AgentFactory.create_writing_task(content_writer)
+
     # crew = Crew(
     #     agents=[research_analyst, content_writer],
     #     tasks=[research_tasks, writing_task],
@@ -119,7 +132,7 @@ def main():
     crew = Crew(
         agents=[research_analyst, content_writer],
         tasks=[research_tasks, writing_task],
-        process=Process.hierarchical,     # hierarchical process
+        process=Process.hierarchical,  # hierarchical process
         manager_llm='gpt-4o',
         memory=True,
         cache=True,
@@ -132,6 +145,7 @@ def main():
         print(f"Error during crew execution: {e}")
 
     return result
+
 
 """
 In CrewAI we've 3 components 
